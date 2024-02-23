@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .createNewPost {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        background-color: #000000bb;
+        display: none;
+      }
+      .createNewPost.active {
+        display: block;
+      }
+      .createNewPost > * {
+        max-width: 1366px;
+        margin: 0 auto;
+      }
+      .createNewPost nav ul {
+        display: flex;
+        justify-content: space-evenly;
+        transition: all 0.5s;
+      }
+      .createNewPost nav ul li button {
+        padding: 5px 10px;
+        border-radius: 10px;
+        transition: all 0.5s;
+      }
+      .createNewPost nav ul li.active button {
+        color: #ffffff;
+        background-color: rgb(153, 40, 168);
+        box-shadow: 0 0 100px #ff4c05, 0 0 80px #ffffff, 0 0 50px #05ff1a,
+          0 0 10px #ff05f3;
+        border-radius: 20px;
+      }
+      .createNewPost .slider1,
+      .createNewPost .slider2,
+      .createNewPost .slider3 {
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        margin: 10% 0;
+        gap: 10px;
+      }
+      .createNewPost .slider1.active,
+      .createNewPost .slider2.active,
+      .createNewPost .slider3.active {
+        display: flex;
+      }
+      .createNewPost .slider1 textarea,
+      .createNewPost .slider2 textarea,
+      .createNewPost .slider3 textarea {
+        width: 80vw;
+        height: 50vh;
+        background-color: #303030;
+        border: 1px solid red;
+        color: #fff;
+        padding: 10px;
+        resize: none;
+        border-radius: 20px;
+      }
+      .createNewPost .slider1 .preview .item {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--font-color);
+        text-wrap: nowrap;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        scale: 1.2;
+      }
+      .createNewPost .slider1 .preview .imgCont {
+        width: 100%;
+        width: 75px;
+        height: 75px;
+        border: 3px solid var(--first-slider-border-color);
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      .createNewPost .slider1 .preview .imgCont img {
+        width: 100%;
+        height: 100%;
+      }
+      .createNewPost .slider2 .preview {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+      }
+      .createNewPost .slider2 .preview .item {
+        max-width: 160px;
+        padding: 10px;
+        position: relative;
+      }
+      .createNewPost .slider2 .preview .item .imgCont {
+        width: 100%;
+      }
+      .createNewPost .slider2 .preview .item .imgCont img {
+        width: 100%;
+        filter: brightness(0.8);
+      }
+      .createNewPost .slider2 .preview .item span {
+        position: absolute;
+        bottom: 30px;
+        left: 20px;
+        color: var(--font-color);
+      }
+      .createNewPost .slider3 .preview .item {
+        border-radius: 20px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="createNewPost">
+      <nav>
+        <ul>
+          <li><button>slider1</button></li>
+          <li><button>slider2</button></li>
+          <li><button>slider3</button></li>
+        </ul>
+      </nav>
+      <div class="slidersContent">
+        <div class="slider1">
+          <div class="inputs">
+            <input type="text" dir="ltr" value="./assets/images/" id="srcImg" />
+            <input type="text" placeholder="under Image" id="underImage" />
+            <button>set</button>
+          </div>
+          <div class="preview"></div>
+          <div class="codesCont">
+            <textarea disabled dir="ltr" id="codes"></textarea>
+          </div>
+        </div>
+        <div class="slider2">
+          <div class="inputs">
+            <input type="text" dir="ltr" value="./assets/images/" id="srcImg" />
+            <input type="text" placeholder="under Image" id="underImage" />
+            <button>set</button>
+          </div>
+          <div class="preview"></div>
+          <div class="codesCont">
+            <textarea disabled dir="ltr" id="codes"></textarea>
+          </div>
+        </div>
+        <div class="slider3">
+          <div class="inputs">
+            <input type="text" dir="ltr" value="./assets/images/" id="srcImg" />
+            <button>set</button>
+          </div>
+          <div class="preview"></div>
+          <div class="codesCont">
+            <textarea disabled dir="ltr" id="codes"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const createNewPost = document.querySelector(".createNewPost");
+      const createNewPostButtonsSlider =
+        createNewPost.querySelectorAll(" ul li button");
+      const createNewPostSlider1 = createNewPost.querySelector(
+        ".createNewPost .slider1"
+      );
+      const createNewPostSlider2 = createNewPost.querySelector(
+        ".createNewPost .slider2"
+      );
+      const createNewPostSlider3 = createNewPost.querySelector(
+        ".createNewPost .slider3"
+      );
+      const createNewPostPreview = createNewPost.querySelectorAll(
+        ".createNewPost .preview"
+      );
+      const createNewPostCodes = createNewPost.querySelectorAll(
+        ".createNewPost textarea"
+      );
+      const createNewPostSlider1Submit =
+        createNewPostSlider1.querySelector(".inputs button");
+      const createNewPostSlider2Submit =
+        createNewPostSlider2.querySelector(".inputs button");
+      const createNewPostSlider3Submit =
+        createNewPostSlider3.querySelector(".inputs button");
+
+      const sliderCont = document.querySelector(".sliderCont");
+      const sliderCont2 = document.querySelector(".sliderCont2");
+      const sliderCont3 = document.querySelector(".sliderCont3");
+
+      async function createElementSlider1() {
+        let data = await getData("./assets/json/homePageSlider1.json");
+        data.forEach((item) => {
+          createItems(item, sliderCont);
+        });
+        $(".sliderCont").owlCarousel({
+          rtl: true,
+          nav: false,
+          dots: false,
+          lazyLoad: true,
+          autoWidth: true,
+        });
+        sliderCont.classList.add("owl-carousel");
+      }
+      async function createElementSlider2() {
+        let data = await getData("./assets/json/homePageSlider2.json");
+        data.forEach((item) => {
+          createItems(item, sliderCont2);
+        });
+        $(".sliderCont2").owlCarousel({
+          rtl: true,
+          nav: false,
+          dots: false,
+          lazyLoad: true,
+          autoWidth: true,
+        });
+        sliderCont2.classList.add("owl-carousel");
+      }
+      async function createElementSlider3() {
+        let data = await getData("./assets/json/homePageSlider3.json");
+        data.forEach((item) => {
+          const div = document.createElement("div");
+          const div_divImg = document.createElement("div");
+          const div_divImg_img = document.createElement("img");
+
+          div.classList.add("item");
+          div_divImg.classList.add("imgCont");
+          div.appendChild(div_divImg);
+          div_divImg.appendChild(div_divImg_img);
+          sliderCont3.appendChild(div);
+          div_divImg_img.src = item.imgSrc;
+        });
+        $(".sliderCont3").owlCarousel({
+          items: 1,
+          rtl: true,
+          nav: false,
+          dots: false,
+          lazyLoad: true,
+          loop: true,
+        });
+        sliderCont3.classList.add("owl-carousel");
+      }
+      createElementSlider1();
+      createElementSlider2();
+      createElementSlider3();
+
+      createNewPostButtonsSlider.forEach((item, index) => {
+        createNewPostSlider1Submit.addEventListener("click", () => {
+          let srcImg = createNewPostSlider1.querySelector("#srcImg");
+          let underImage = createNewPostSlider1.querySelector("#underImage");
+          let data = {
+            imgSrc: srcImg.value,
+            underImgText: underImage.value,
+          };
+          let dataShow = `
+    {
+      "imgSrc": "${data.imgSrc}",
+      "underImgText": "${data.underImgText}"
+    }
+    `;
+          createNewPostCodes[0].value = dataShow;
+          createNewPostPreview[0].textContent = "";
+          createItems(data, createNewPostPreview[0]);
+        });
+        createNewPostSlider2Submit.addEventListener("click", () => {
+          let srcImg = createNewPostSlider2.querySelector("#srcImg");
+          let underImage = createNewPostSlider2.querySelector("#underImage");
+          let data = {
+            imgSrc: srcImg.value,
+            underImgText: underImage.value,
+          };
+          let dataShow = `
+    {
+      "imgSrc": "${data.imgSrc}",
+      "underImgText": "${data.underImgText}"
+    }
+    `;
+          createNewPostPreview[1].textContent = "";
+          createNewPostCodes[1].value = dataShow;
+          createItems(data, createNewPostPreview[1]);
+        });
+        createNewPostSlider3Submit.addEventListener("click", () => {
+          let data = {
+            imgSrc: "",
+          };
+
+          const div = document.createElement("div");
+          const div_divImg = document.createElement("div");
+          const div_divImg_img = document.createElement("img");
+
+          div.classList.add("item");
+          div_divImg.classList.add("imgCont");
+          div.appendChild(div_divImg);
+          div_divImg.appendChild(div_divImg_img);
+          createNewPostPreview[2].textContent = "";
+          createNewPostPreview[2].appendChild(div);
+          div_divImg_img.src = data.imgSrc;
+          let dataShow = `
+    {
+      "imgSrc": "${data.imgSrc}",
+    }
+    `;
+          createNewPostCodes[2].value = dataShow;
+        });
+
+        item.addEventListener("click", () => {
+          createNewPostButtonsSlider.forEach((it, index) => {
+            it.parentElement.classList.remove("active");
+            createNewPostSlider1.classList.remove("active");
+            createNewPostSlider2.classList.remove("active");
+            createNewPostSlider3.classList.remove("active");
+          });
+          if (index === 0) {
+            createNewPostSlider1.classList.add("active");
+            item.parentElement.classList.add("active");
+          } else if (index === 1) {
+            createNewPostSlider2.classList.add("active");
+            item.parentElement.classList.add("active");
+          } else if (index === 2) {
+            createNewPostSlider3.classList.add("active");
+            item.parentElement.classList.add("active");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
